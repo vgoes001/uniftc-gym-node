@@ -1,8 +1,11 @@
 import { Router, Request, Response } from 'express';
 import { parseISO } from 'date-fns';
 import CreateAppointmentService from '../services/CreateAppointmentService';
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const appointmentsRouter = Router();
+
+appointmentsRouter.use(ensureAuthenticated);
 
 appointmentsRouter.post('/', async (request: Request, response: Response) => {
   try {
