@@ -1,4 +1,5 @@
 import { startOfHour } from 'date-fns';
+
 import { injectable, inject } from 'tsyringe';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import AppError from '@shared/errors/AppError';
@@ -23,7 +24,9 @@ class CreateAppointmentService {
     );
 
     if (findAppointmentInSameDate) {
-      throw new AppError('This appointment is already booked');
+      throw new AppError(
+        'Não é possível agendar mais de um agendamento por dia',
+      );
     }
     const appointment = await this.appointmentsRepository.create({
       date: appointmentDate,
