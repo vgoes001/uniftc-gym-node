@@ -1,8 +1,9 @@
 import { uuid } from 'uuidv4';
-import { isEqual } from 'date-fns';
+import { isEqual, getMonth, getYear, getDate } from 'date-fns';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentDTO';
+import IFindAllInDayDTO from '@modules/appointments/dtos/IFindAllInDayDTO';
 
 export default class FakeAppointmentsRepository
   implements IAppointmentsRepository {
@@ -27,5 +28,20 @@ export default class FakeAppointmentsRepository
     this.appointments.push(appointment);
 
     return appointment;
+  }
+
+  public async findAllInDay({
+    day,
+    month,
+    year,
+  }: IFindAllInDayDTO): Promise<Appointment[]> {
+    const findAppointment = this.appointments.filter(
+      appointment =>
+        getMonth(appointment.date) + 1 === month &&
+        getYear(appointment.date) === year &&
+        getDate(appointment.date) === day,
+    );
+
+    return findAppointment;
   }
 }
