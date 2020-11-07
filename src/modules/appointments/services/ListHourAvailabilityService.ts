@@ -2,7 +2,7 @@
 import { injectable, inject } from 'tsyringe';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import AppError from '@shared/errors/AppError';
-import { getHours } from 'date-fns';
+import { getHours, isAfter } from 'date-fns';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
 interface IRequest {
@@ -18,7 +18,7 @@ type IResponse = Array<{
 }>;
 
 @injectable()
-class ListDayAvailabilityService {
+class ListHourAvailabilityService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
@@ -35,14 +35,18 @@ class ListDayAvailabilityService {
       { length: 8 },
       (value, index) => index + 8,
     );
+    const currentDate = new Date(Date.now());
 
     const availability = eachHourArray.map(hour => {
       const appointmentsInHour = appointments.filter(
         appointment => getHours(appointment.date) === hour,
       );
+
+      const compareDate = new Date(year, month - 1, day, hour);
       return {
         hour,
-        available: appointmentsInHour.length < 29,
+        available:
+          appointmentsInHour.length < 29 && isAfter(compareDate, currentDate),
         status:
           appointmentsInHour.length < 10
             ? 'vazio'
@@ -56,4 +60,4 @@ class ListDayAvailabilityService {
   }
 }
 
-export default ListDayAvailabilityService;
+export default ListHourAvailabilityService;

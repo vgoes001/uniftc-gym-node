@@ -25,7 +25,7 @@ describe('CriarUsuario', () => {
   });
 
   it('Não deve ser capaz de criar um novo usuario com o mesmo número de matricula de outro usuário', async () => {
-    await createUser.execute({
+    await fakeUsersRepository.create({
       name: 'Vitor Goes',
       course: 'Sistemas de Informacao',
       enrollment: '123456789',
