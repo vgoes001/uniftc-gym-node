@@ -3,6 +3,7 @@ import { injectable, inject } from 'tsyringe';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import AppError from '@shared/errors/AppError';
 import { getHours, isAfter } from 'date-fns';
+import { uuid } from 'uuidv4';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
 interface IRequest {
@@ -15,6 +16,7 @@ type IResponse = Array<{
   hour: number;
   status: string;
   available: boolean;
+  key: string;
 }>;
 
 @injectable()
@@ -44,6 +46,7 @@ class ListHourAvailabilityService {
 
       const compareDate = new Date(year, month - 1, day, hour);
       return {
+        key: uuid(),
         hour,
         available:
           appointmentsInHour.length < 29 && isAfter(compareDate, currentDate),

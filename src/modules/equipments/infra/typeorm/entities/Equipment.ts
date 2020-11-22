@@ -1,38 +1,25 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
+  PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
   OneToMany,
 } from 'typeorm';
 
-import User from '@modules/users/infra/typeorm/entities/User';
 import AppointmentsEquipments from '@modules/appointments/infra/typeorm/entities/AppointmentsEquipments';
 
-@Entity('appointments')
-class Appointment {
+@Entity('equipments')
+class Equipment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('timestamp with time zone')
-  date: Date;
-
   @Column()
-  user_id: string;
-
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
-  user: User;
+  name: string;
 
   @OneToMany(
     () => AppointmentsEquipments,
-    appointmentsEquipments => appointmentsEquipments.appointment,
-    {
-      cascade: true,
-    },
+    appointment_equipment => appointment_equipment.equipment,
   )
   appointment_equipments: AppointmentsEquipments[];
 
@@ -43,4 +30,4 @@ class Appointment {
   updated_at: Date;
 }
 
-export default Appointment;
+export default Equipment;

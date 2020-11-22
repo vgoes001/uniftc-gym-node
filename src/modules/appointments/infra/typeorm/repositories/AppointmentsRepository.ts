@@ -23,7 +23,7 @@ export default class AppointmentsRepository implements IAppointmentsRepository {
     const finalDate = `${year}-${parsedMonth}-${parsedDay}`;
 
     const findAppointment = (await this.ormRepository.query(
-      `SELECT DATE(date) FROM appointments 
+      `SELECT DATE(date) FROM appointments
       WHERE DATE(date)='${finalDate}'
       AND user_id = '${user_id}'
       `,
@@ -35,12 +35,21 @@ export default class AppointmentsRepository implements IAppointmentsRepository {
   public async create({
     user_id,
     date,
-  }: ICreateAppointmentDTO): Promise<Appointment> {
-    const appointment = this.ormRepository.create({ user_id, date });
+    equipments,
+  }: ICreateAppointmentDTO): Promise<Appointment | undefined> {
+    const appointment = this.ormRepository.create({
+      user_id,
+      date,
+      appointment_equipments: equipments,
+    });
 
-    await this.ormRepository.save(appointment);
+    const { id } = await this.ormRepository.save(appointment);
 
-    return appointment;
+    const response = await this.ormRepository.findOne(id, {
+      relations: ['user'],
+    });
+
+    return response;
   }
 
   public async findAllInDay({
@@ -51,13 +60,14 @@ export default class AppointmentsRepository implements IAppointmentsRepository {
     const parsedMonth = String(month).padStart(2, '0');
     const parsedDay = String(day).padStart(2, '0');
 
-    const appointments = this.ormRepository.find({
+    const appointments = await this.ormRepository.find({
       where: {
         date: Raw(
           dateFieldName =>
             `to_char(${dateFieldName}, 'DD-MM-YYYY') = '${parsedDay}-${parsedMonth}-${year}'`,
         ),
       },
+      relations: ['user'],
     });
 
     return appointments;
