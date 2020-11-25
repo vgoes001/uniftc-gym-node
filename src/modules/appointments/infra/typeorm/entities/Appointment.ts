@@ -34,6 +34,7 @@ class Appointment {
       cascade: true,
     },
   )
+  @JoinColumn({ name: 'appointment_id' })
   appointment_equipments: AppointmentsEquipments[];
 
   @CreateDateColumn()

@@ -46,7 +46,7 @@ export default class AppointmentsRepository implements IAppointmentsRepository {
     const { id } = await this.ormRepository.save(appointment);
 
     const response = await this.ormRepository.findOne(id, {
-      relations: ['user'],
+      relations: ['user', 'appointment_equipments'],
     });
 
     return response;
@@ -67,7 +67,7 @@ export default class AppointmentsRepository implements IAppointmentsRepository {
             `to_char(${dateFieldName}, 'DD-MM-YYYY') = '${parsedDay}-${parsedMonth}-${year}'`,
         ),
       },
-      relations: ['user'],
+      relations: ['user', 'appointment_equipments'],
     });
 
     return appointments;

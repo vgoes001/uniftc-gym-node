@@ -26,6 +26,9 @@ class User {
   @Column()
   avatar: string;
 
+  @Column({ enum: ['male', 'female'] })
+  genre: string;
+
   @CreateDateColumn()
   created_at: Date;
 

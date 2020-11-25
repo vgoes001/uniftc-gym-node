@@ -23,7 +23,9 @@ class AppointmentsEquipments {
   @JoinColumn({ name: 'appointment_id' })
   appointment: Appointment;
 
-  @ManyToOne(() => Equipment, equipment => equipment.appointment_equipments)
+  @ManyToOne(() => Equipment, equipment => equipment.appointment_equipments, {
+    eager: true,
+  })
   @JoinColumn({ name: 'equipment_id' })
   equipment: Equipment;
 

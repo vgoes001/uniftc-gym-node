@@ -7,6 +7,7 @@ import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 interface IRequest {
   enrollment: string;
   name: string;
+  genre: string;
   course: string;
   password: string;
 }
@@ -24,6 +25,7 @@ class CreateUserService {
     name,
     course,
     enrollment,
+    genre,
     password,
   }: IRequest): Promise<User> {
     const checkUserExists = await this.usersRepository.findByEnrollment(
@@ -40,6 +42,7 @@ class CreateUserService {
       name,
       enrollment,
       course,
+      genre,
       password: hashedPassword,
     });
 

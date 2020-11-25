@@ -5,13 +5,14 @@ import CreateUserService from '@modules/users/services/CreateUserService';
 
 export default class UsersController {
   public async create(request: Request, response: Response): Promise<Response> {
-    const { enrollment, name, course, password } = request.body;
+    const { enrollment, name, course, password, genre } = request.body;
 
     const createUser = container.resolve(CreateUserService);
     const user = await createUser.execute({
       name,
       enrollment,
       course,
+      genre,
       password,
     });
     delete user.password;
